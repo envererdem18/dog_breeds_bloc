@@ -3,11 +3,7 @@ import 'package:dog_breeds_bloc/src/core/theme/app_text_styles.dart';
 import 'package:dog_breeds_bloc/src/core/theme/color_palette.dart';
 import 'package:flutter/material.dart';
 
-abstract class AppTheme {
-  static InputBorder inputBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(Sizes.p8),
-  );
-}
+abstract class AppTheme {}
 
 class LightTheme extends AppTheme {
   static ThemeData data = ThemeData.light(useMaterial3: true).copyWith(

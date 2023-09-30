@@ -9,12 +9,14 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # UI
   cupertino_icons: ^1.0.2
 
   # State Management
   go_router: ^11.1.2
 
-  # UI
+  # Network
+  http:
 
 dev_dependencies:
   flutter_test:

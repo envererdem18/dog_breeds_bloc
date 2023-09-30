@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:dog_breeds_bloc/src/core/theme/color_palette.dart';
+import 'package:dog_breeds_bloc/src/features/home/data/dog_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/constants.dart';
@@ -14,6 +15,16 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final client = DogRepository();
+              final data = await client.generate(breed: 'hound');
+              print(data);
+            },
+            icon: const Icon(Icons.network_check),
+          ),
+        ],
       ),
       body: ListView.separated(
         separatorBuilder: (context, index) => const Divider(),

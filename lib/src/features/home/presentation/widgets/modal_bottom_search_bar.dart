@@ -1,8 +1,10 @@
+import 'package:dog_breeds_bloc/src/common_widgets/primary_button.dart';
 import 'package:dog_breeds_bloc/src/core/theme/custom_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/sizes.dart';
+import 'drag_handle_widget.dart';
 
 class ModalButtomSearchBar extends StatefulWidget {
   const ModalButtomSearchBar({super.key});
@@ -27,19 +29,16 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
 
   bool _showSearchButton = true;
   Offset _pointerDownPosition = const Offset(0, 0);
-  bool? _isFullScreen;
+  bool _isFullScreen = false;
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
       visible: _showSearchButton,
       replacement: const SizedBox.shrink(),
-      child: ElevatedButton(
+      child: PrimaryButton(
         onPressed: () async {
-          setState(() {
-            _showSearchButton = !_showSearchButton;
-          });
-          _isFullScreen = null;
+          _toggleSearchButton();
           await showModalBottomSheet(
             context: context,
             isScrollControlled: true,
@@ -49,10 +48,7 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
                 onPointerDown: (details) {
                   _pointerDownPosition = details.position;
                 },
-                onPointerUp: (details) {
-                  _whenUserDraggedDownward(details, context);
-                  _whenUserDraggedUpward(details);
-                },
+                onPointerUp: _drag,
                 child: DraggableScrollableSheet(
                   initialChildSize: .2,
                   minChildSize: .2,
@@ -67,7 +63,7 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
                       horizontal: Sizes.p16,
                     ),
                     children: [
-                      const _DragHandleWidget(),
+                      const DragHandleWidget(),
                       TextFormField(
                         autofocus: true,
                         decoration: const InputDecoration(
@@ -83,82 +79,47 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
               );
             },
           );
-          setState(() {
-            _showSearchButton = !_showSearchButton;
-          });
+          _toggleSearchButton();
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              'Search',
-              style: context.textTheme.bodyMedium!.copyWith(
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
+        text: 'Search',
+        backgroundColor: context.theme.scaffoldBackgroundColor,
       ),
     );
   }
 
-  void _whenUserDraggedUpward(PointerUpEvent details) {
-    if (_isUpward(details)) {
-      if (_isFullScreen == true) return;
-      _isFullScreen = true;
-      _controller.animateTo(
-        1,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.linear,
-      );
-    }
+  void _toggleSearchButton() =>
+      setState(() => _showSearchButton = !_showSearchButton);
+
+  void _drag(PointerUpEvent details) {
+    return switch (_pointerDownPosition.dy.compareTo(details.position.dy)) {
+      1 => _onDraggedUpward(details),
+      -1 => _onDraggedDownward(details, context),
+      _ => null,
+    };
   }
 
-  void _whenUserDraggedDownward(PointerUpEvent details, BuildContext context) {
-    if (_isDownward(details)) {
-      if (_isFullScreen == false || _isFullScreen == null) {
-        context.pop();
-      } else {
-        _isFullScreen = false;
-        _controller.animateTo(
-          .2,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.linear,
-        );
-      }
-    }
+  void _onDraggedUpward(PointerUpEvent details) {
+    if (_isFullScreen) return;
+
+    _isFullScreen = true;
+    _controller.animateTo(
+      1,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.linear,
+    );
   }
 
-  bool _isUpward(PointerUpEvent details) =>
-      _pointerDownPosition.dy - details.position.dy > 0.0;
+  void _onDraggedDownward(PointerUpEvent details, BuildContext context) {
+    if (!_isFullScreen) {
+      context.pop();
+      return;
+    }
 
-  bool _isDownward(PointerUpEvent details) =>
-      details.position.dy - _pointerDownPosition.dy > 0;
-}
-
-class _DragHandleWidget extends StatelessWidget {
-  const _DragHandleWidget();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: Sizes.p16,
-        bottom: Sizes.p12,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: 6,
-            width: 40,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(Sizes.p16),
-            ),
-          ),
-        ],
-      ),
+    _isFullScreen = false;
+    _controller.animateTo(
+      .2,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.linear,
     );
   }
 }

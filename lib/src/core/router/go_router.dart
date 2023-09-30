@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/base/base_screen.dart';
+import 'not_found_screen.dart';
 
 enum AppRoute {
   home,
@@ -62,6 +63,7 @@ final GoRouter routerConfig = GoRouter(
       ),
     ),
   ],
+  errorBuilder: (context, state) => const NotFoundScreen(),
 );
 
 class ScreenPlaceholder extends StatelessWidget {
