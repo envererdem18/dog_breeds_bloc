@@ -45,6 +45,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final context = event.context;
     final allBreeds = await _dogRepository.getAllBreeds();
     final breedsWithImage = <Breed>[];
+
+    ///
+    /// Fetching the images in [parallel] and preCaching them here
+    ///
     await Future.wait(
       allBreeds.map(
         (breed) async {

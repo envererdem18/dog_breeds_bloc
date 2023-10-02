@@ -9,15 +9,6 @@ class DogBreedsBlocObserver extends BlocObserver {
     print('${bloc.runtimeType} $event');
   }
 
-  // @override
-  // void onTransition(
-  //   Bloc<dynamic, dynamic> bloc,
-  //   Transition<dynamic, dynamic> transition,
-  // ) {
-  //   super.onTransition(bloc, transition);
-  //   print('${bloc.runtimeType} $transition');
-  // }
-
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
     super.onChange(bloc, change);

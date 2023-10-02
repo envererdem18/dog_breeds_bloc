@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'color_palette.dart';
 
-// if you wanna reach text styles from BuldContext
+/// It allows us to access theme arguments through the [BuildContext].
 extension CustomTextStylesExtension on BuildContext {
   ThemeData get theme => Theme.of(this);
   TextTheme get textTheme => theme.textTheme;

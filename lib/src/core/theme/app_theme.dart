@@ -66,6 +66,7 @@ class LightTheme extends AppTheme {
   static get _borderRadius => BorderRadius.circular(Sizes.p8);
 }
 
+/// Dark Theme is not fully configured yet
 class DarkTheme extends AppTheme {
   static ThemeData data = ThemeData.dark(useMaterial3: true).copyWith(
     appBarTheme: AppBarTheme(

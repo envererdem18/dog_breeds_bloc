@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dog_breeds_bloc/src/common_widgets/primary_button.dart';
 import 'package:dog_breeds_bloc/src/core/theme/custom_text_styles.dart';
 import 'package:dog_breeds_bloc/src/features/home/data/dog_repository.dart';
@@ -28,8 +29,8 @@ class BreedSummaryWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(
-                  breed.imagePath,
+                CachedNetworkImage(
+                  imageUrl: breed.imagePath,
                   fit: BoxFit.cover,
                 ),
                 gapH12,
@@ -105,7 +106,10 @@ class BreedSummaryWidget extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(Sizes.p12),
-                    child: Image.network(imagePath),
+                    child: Image.network(
+                      imagePath,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   gapH16,
                   CloseButton(

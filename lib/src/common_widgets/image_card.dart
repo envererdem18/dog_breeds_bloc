@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 class ImageCard extends StatelessWidget {
   final Breed breed;
   final VoidCallback? onTap;
+
+  /// A simple card displays breed name and image as [CachedNetworkImage]
   const ImageCard({
     Key? key,
     required this.breed,

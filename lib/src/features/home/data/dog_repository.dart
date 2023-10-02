@@ -46,11 +46,7 @@ class DogRepository {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final url = data['message'];
-        _fetch.runOnce(
-          () => NetworkAssetBundle(Uri.parse(url)).load(url).then(
-                (byteData) => byteData.buffer.asUint8List(),
-              ),
-        );
+        _setMemoizer(url);
         return url;
       } else {
         throw Exception();
@@ -58,5 +54,17 @@ class DogRepository {
     } catch (e) {
       throw Exception();
     }
+  }
+
+  ///
+  /// [AsyncMemoizer] and runOnce are used to ensure that this operation is performed only once,
+  /// thus providing performance and efficiency gains.
+  ///
+  void _setMemoizer(url) {
+    _fetch.runOnce(
+      () => NetworkAssetBundle(Uri.parse(url)).load(url).then(
+            (byteData) => byteData.buffer.asUint8List(),
+          ),
+    );
   }
 }
