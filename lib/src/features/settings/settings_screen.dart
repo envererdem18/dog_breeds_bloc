@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:math' as math;
 
 import 'package:dog_breeds_bloc/src/core/theme/color_palette.dart';
@@ -12,15 +13,21 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: AppBar(title: const Text('Settings')),
       body: ListView.separated(
         separatorBuilder: (context, index) => const Divider(),
         padding: const EdgeInsets.symmetric(horizontal: Sizes.p8),
         itemCount: settingsScreenItems.length,
         itemBuilder: (context, index) {
           final item = settingsScreenItems[index];
+          if (index == 5) {
+            String osVersion = Platform.operatingSystemVersion;
+            return _SettingScreenItem(
+              leading: item.icon,
+              title: item.title,
+              trailing: Text(osVersion),
+            );
+          }
           return _SettingScreenItem(
             leading: item.icon,
             title: item.title,
