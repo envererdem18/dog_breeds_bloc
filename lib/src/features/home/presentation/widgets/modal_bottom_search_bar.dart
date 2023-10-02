@@ -1,35 +1,43 @@
 import 'package:dog_breeds_bloc/src/common_widgets/primary_button.dart';
 import 'package:dog_breeds_bloc/src/core/theme/custom_text_styles.dart';
+import 'package:dog_breeds_bloc/src/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/sizes.dart';
 import 'drag_handle_widget.dart';
 
 class ModalButtomSearchBar extends StatefulWidget {
-  const ModalButtomSearchBar({super.key});
+  final String? searchTerm;
+  const ModalButtomSearchBar({
+    Key? key,
+    this.searchTerm,
+  }) : super(key: key);
 
   @override
   State<ModalButtomSearchBar> createState() => _ModalButtomSearchBarState();
 }
 
 class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
-  late final DraggableScrollableController _controller;
+  late final DraggableScrollableController _draggableController;
   @override
   void initState() {
-    _controller = DraggableScrollableController();
+    _draggableController = DraggableScrollableController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _draggableController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
   bool _showSearchButton = true;
   Offset _pointerDownPosition = const Offset(0, 0);
   bool _isFullScreen = false;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +45,7 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
       visible: _showSearchButton,
       replacement: const SizedBox.shrink(),
       child: PrimaryButton(
+        text: widget.searchTerm ?? 'Search',
         onPressed: () async {
           _toggleSearchButton();
           await showModalBottomSheet(
@@ -55,7 +64,7 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
                   maxChildSize: .9,
                   expand: false,
                   shouldCloseOnMinExtent: false,
-                  controller: _controller,
+                  controller: _draggableController,
                   builder: (_, scrollController) => ListView(
                     controller: scrollController,
                     physics: const ClampingScrollPhysics(),
@@ -65,13 +74,19 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
                     children: [
                       const DragHandleWidget(),
                       TextFormField(
+                        controller: _searchController,
                         autofocus: true,
                         decoration: const InputDecoration(
                           hintText: 'Search',
                         ),
                         textCapitalization: TextCapitalization.sentences,
                         style: context.textTheme.bodyMedium,
-                        onEditingComplete: () => context.pop(),
+                        onChanged: (value) {
+                          context.read<HomeBloc>().add(SearcBreedEvent(value));
+                        },
+                        onEditingComplete: () {
+                          context.pop();
+                        },
                       ),
                     ],
                   ),
@@ -79,9 +94,9 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
               );
             },
           );
+          _searchController.clear();
           _toggleSearchButton();
         },
-        text: 'Search',
         backgroundColor: context.theme.scaffoldBackgroundColor,
       ),
     );
@@ -102,7 +117,7 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
     if (_isFullScreen) return;
 
     _isFullScreen = true;
-    _controller.animateTo(
+    _draggableController.animateTo(
       1,
       duration: const Duration(milliseconds: 200),
       curve: Curves.linear,
@@ -116,7 +131,7 @@ class _ModalButtomSearchBarState extends State<ModalButtomSearchBar> {
     }
 
     _isFullScreen = false;
-    _controller.animateTo(
+    _draggableController.animateTo(
       .2,
       duration: const Duration(milliseconds: 200),
       curve: Curves.linear,

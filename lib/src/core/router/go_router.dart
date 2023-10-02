@@ -1,5 +1,6 @@
 import 'package:dog_breeds_bloc/src/features/home/presentation/home_screen.dart';
 import 'package:dog_breeds_bloc/src/features/settings/settings_screen.dart';
+import 'package:dog_breeds_bloc/src/features/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +11,7 @@ enum AppRoute {
   home,
   settings,
   settingsPlaceholder,
+  splash,
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -20,7 +22,7 @@ final _shellNavigatorSettingsKey =
     GlobalKey<NavigatorState>(debugLabel: 'settings screen');
 
 final GoRouter routerConfig = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/splash',
   navigatorKey: _rootNavigatorKey,
   debugLogDiagnostics: false,
   routes: [
@@ -60,6 +62,15 @@ final GoRouter routerConfig = GoRouter(
       pageBuilder: (context, state) => const MaterialPage(
         fullscreenDialog: true,
         child: SettingsScreen(),
+      ),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/splash',
+      name: AppRoute.splash.name,
+      pageBuilder: (context, state) => const MaterialPage(
+        fullscreenDialog: true,
+        child: SplashScreen(),
       ),
     ),
   ],

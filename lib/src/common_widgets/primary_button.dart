@@ -6,7 +6,7 @@ class PrimaryButton extends StatelessWidget {
   final double elevation;
   final String? text;
   final VoidCallback? onPressed;
-  final MainAxisAlignment textAlignment;
+  final Alignment textAlignment;
   final Color? backgroundColor;
   final Color? textColor;
   const PrimaryButton({
@@ -14,32 +14,30 @@ class PrimaryButton extends StatelessWidget {
     this.elevation = 5,
     this.text,
     this.onPressed,
-    this.textAlignment = MainAxisAlignment.start,
+    this.textAlignment = Alignment.centerLeft,
     this.backgroundColor,
     this.textColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
+    return ElevatedButton(
       onPressed: onPressed,
-      elevation: elevation,
-      height: Sizes.p64,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Sizes.p8),
+      style: ElevatedButton.styleFrom(
+        elevation: elevation,
+        fixedSize: const Size(double.infinity, Sizes.p64),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Sizes.p8),
+        ),
+        backgroundColor: backgroundColor,
+        visualDensity: VisualDensity.comfortable,
+        alignment: textAlignment,
       ),
-      color: backgroundColor ?? Colors.blue,
-      visualDensity: VisualDensity.comfortable,
-      child: Row(
-        mainAxisAlignment: textAlignment,
-        children: [
-          Text(
-            text ?? '',
-            style: context.textTheme.bodyMedium!.copyWith(
-              color: textColor ?? Colors.grey,
-            ),
-          ),
-        ],
+      child: Text(
+        text ?? '',
+        style: context.textTheme.bodyMedium!.copyWith(
+          color: textColor ?? Colors.grey,
+        ),
       ),
     );
   }

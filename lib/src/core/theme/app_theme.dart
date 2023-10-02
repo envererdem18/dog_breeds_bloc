@@ -8,6 +8,11 @@ abstract class AppTheme {}
 class LightTheme extends AppTheme {
   static ThemeData data = ThemeData.light(useMaterial3: true).copyWith(
     textTheme: TextTheme(
+      titleLarge: TextStyle(
+        fontSize: Sizes.p20,
+        fontWeight: FontWeight.w600,
+        color: LightColors.titleBlue,
+      ),
       titleMedium: TextStyle(
         fontSize: Sizes.p20,
         fontWeight: FontWeight.w600,
